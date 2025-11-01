@@ -10,11 +10,9 @@ app.use(express.json());
 app.use(express.static("public"));
 
 
-const productRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/userRoutes');
+const jokebookRoutes = require('./routes/jokebookRoutes');
 
-app.use('/products', productRoutes);
-app.use('/users', userRoutes);
+app.use('/jokebook', jokebookRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
