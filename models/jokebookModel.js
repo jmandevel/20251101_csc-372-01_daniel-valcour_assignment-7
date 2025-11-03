@@ -8,9 +8,10 @@ async function getAllCategories() {
 }
 
 async function getJokesByCategory(category, limit) {
-    const queryText = 
-        limit ? "SELECT * FROM jokes WHERE category = $1 LIMIT $2"
-        : "SELECT * FROM jokes WHERE category = $1";
+    let queryText =  "SELECT * FROM jokes WHERE category = $1";
+    if (limit) {
+        queryText += " LIMIT $2";
+    }
     const values = limit ? [category, limit] : [category];
     const result = await pool.query(queryText, values);
     return result.rows;
@@ -18,15 +19,15 @@ async function getJokesByCategory(category, limit) {
 
 async function getRandomJoke() {
     let queryText = "SELECT * FROM jokes ORDER BY RANDOM() LIMIT 1";
-    const result = await pool.query(queryText, values);
-    return result.rowCount;
+    const result = await pool.query(queryText, []);
+    return result.rows[0];
 }
 
 async function addJoke(category, setup, delivery) {
-    let queryText = "INSERT INTO JOKES (category, setup, delivery) VALUES ($1, $2, $3)";
+    let queryText = "INSERT INTO JOKES (category, setup, delivery) VALUES ($1, $2, $3) RETURNING *";
     let values = [category, setup, delivery];
     const result = await pool.query(queryText, values);
-    return result.rows;
+    return result.rows[0];
 }
 
 module.exports = {

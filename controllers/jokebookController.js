@@ -1,4 +1,4 @@
-"use strict";
+ "use strict";
 const model = require('../models/jokebookModel');
 
 async function getAllCategories(req, res) {
@@ -13,8 +13,9 @@ async function getAllCategories(req, res) {
 
 async function getJokesByCategory(req, res) {
     const { category } = req.params;
+    const { limit } = req.query;
     try {
-        const jokes = await model.getJokesByCategory(category);
+        const jokes = await model.getJokesByCategory(category, limit);
         res.json(jokes);
     } catch (err) {
         console.error(err);
@@ -23,7 +24,6 @@ async function getJokesByCategory(req, res) {
 }
 
 async function getRandomJoke(req, res) {
-    const { category } = req.params;
     try {
         const joke = await model.getRandomJoke();
         res.json(joke);
@@ -34,7 +34,7 @@ async function getRandomJoke(req, res) {
 }
 
 async function addJoke(req, res) {
-    const { category, setup, delivery } = req.params;
+    const { category, setup, delivery } = req.body;
     try {
         const joke = await model.addJoke(category, setup, delivery);
         res.json(joke);
